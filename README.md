@@ -6,11 +6,11 @@ Instances obtained from [QAPLIB](http://anjos.mgi.polymtl.ca/qaplib/inst.html).
 
 Compilation
 -----------
-Use: __make__
+Use: __make__ (linux) or __mingw32-make.exe__
 
 Run
 ---------
-Execute with the instance __data.dat__ using:    `./bin/qap [data.dat]`
+Execute with the instance __data.dat__ using:    `./bin/qap [data.dat]` (j'utilise ./bin/qap ./data/bur26a.dat)
 
 Info
 ---------
