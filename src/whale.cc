@@ -10,7 +10,7 @@ Whale::Whale(const Input &input, int maxEvaluations, int maxFails)
     maxEvaluations_ = maxEvaluations;
     maxFails_ = maxFails;
     solution_ = randomSolution();
-    cost_ = calculateCost(solution_);
+    cost_ = calculateCost();
 
     execute();
 
@@ -22,7 +22,7 @@ void Whale::execute(){
 
 }
 
-int Whale::calculateCost(vector<int> &solution)
+int Whale::calculateCost()//vector<int> &solution)
 {
     int cost = 0;
     for (int i = 0; i < dimension_; ++i)
@@ -30,7 +30,7 @@ int Whale::calculateCost(vector<int> &solution)
         for (int j = 0; j < dimension_; ++j)
         {
             // Objetive function
-            cost += flow_[i][j] * distances_[solution[i]][solution[j]];
+            cost += flow_[i][j] * distances_[solution_[i]][solution_[j]];
         }
     }
 
