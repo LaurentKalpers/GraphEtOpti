@@ -9,7 +9,8 @@ all:	folders
 	g++ -o obj/memetic.o -c -Werror -std=c++0x -O2 -Iinclude src/memetic.cc
 	g++ -o obj/tabuSearch.o -c -Werror -std=c++0x -O2 -Iinclude src/tabuSearch.cc
 	g++ -o obj/whale.o -c -Werror -std=c++0x -O2 -Iinclude src/whale.cc
-	g++ -o bin/qap obj/cost.o obj/greedy.o obj/input.o obj/localSearch.o obj/main.o obj/memetic.o obj/tabuSearch.o obj/whale.o
+	g++ -o obj/herd.o -c -Werror -std=c++0x -O2 -Iinclude src/herd.cc
+	g++ -o bin/qap obj/cost.o obj/greedy.o obj/input.o obj/localSearch.o obj/main.o obj/memetic.o obj/tabuSearch.o obj/whale.o obj/herd.o
 	
 
 folders:

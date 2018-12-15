@@ -4,7 +4,8 @@
 #include "localSearch.h"
 #include "tabuSearch.h"
 #include "memetic.h"
-#include "Whale.h"
+#include "whale.h"
+#include "herd.h"
 
 using namespace std;
 
@@ -77,13 +78,8 @@ int main (int argc, char *argv[])
         cout << solution[i] << " ";
     } cout << endl;
 
+
+    Herd h(input);
+
     return 0;
-
-
-
-
-    printf("start time is : %s", ctime(&start));    
-
-    
-
 }

@@ -7,10 +7,10 @@
 
 using namespace std;
 
-class herd
+class Herd
 {
     public:
-        explicit Herd(Input input, int evaluations = 100000, int maxFails = 20);
+        explicit Herd(const Input &input, int evaluations = 100000, int maxFails = 20);
 
         void execute();
 
@@ -30,6 +30,15 @@ class herd
 
 
     private:
+
+        // Input data
+        int dimension_;
+        vector< vector<int> > distances_;
+        vector< vector<int> > flow_;
+
+        int maxEvaluations_ ;
+        int maxFails_ ;
+
         float a_;
         float r_;
         float A_;
@@ -37,11 +46,11 @@ class herd
         float p_;
         float l_;
         float D_;
-        vector<int> solution;
-        int bestScore;
+        vector<int> bestSolution_;
+        int bestScore_;
         time_t start_;
         time_t endwait_;
-        Input input_;
+        //Input input_;
         vector<Whale> whale_list_;
         Whale bestWhale_;
         int taille_;
