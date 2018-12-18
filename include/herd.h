@@ -45,14 +45,16 @@ class Herd
         float C_;
         float p_;
         float l_;
-        float D_;
+        float b_;
+        vector<int> D_;
         vector<int> bestSolution_;
+        vector<int> D_prime_;
         int bestScore_;
         time_t start_;
         time_t endwait_;
         //Input input_;
         vector<Whale> whale_list_;
-        Whale bestWhale_;
+       // Whale bestWhale_;
         int taille_;
 
 };

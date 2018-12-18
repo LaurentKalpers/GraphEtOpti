@@ -1,14 +1,15 @@
 #include "whale.h"
 
-Whale::Whale(const Input &input, int maxEvaluations, int maxFails)
-    : dimension_(input.getDimension()), distances_(input.getDistances()), flow_(input.getFlow()) 
+Whale::Whale(int dimension, vector< vector<int> > distances,vector< vector<int> > flow)
 {
+
+    dimension_ = dimension;
+    distances_ = distances;
+    flow_ = flow;
 
     solution_.resize(dimension_);
 
     // Fix parameters
-    maxEvaluations_ = maxEvaluations;
-    maxFails_ = maxFails;
     solution_ = randomSolution();
     cost_ = calculateCost();
 
@@ -60,11 +61,16 @@ vector<int> Whale::randomSolution()
     // Initialize
     for (int i = 0; i < dimension_; ++i)
     {
-        solution[i] = i;
+        solution[i] = i; //mettre un +1 dans l affichage
     }
 
     // Shuffle vector
     random_shuffle (solution.begin(), solution.end());
 
     return solution;
+}
+
+void Whale::setSolution(vector<int> v)
+{
+    solution_ = v ; 
 }

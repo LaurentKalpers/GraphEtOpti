@@ -65,7 +65,7 @@ int main (int argc, char *argv[])
     } cout << endl;
 
     cout << endl;*/
- 
+ /*
     Whale w(input);
 
     cout << "Whale: " << endl;
@@ -78,7 +78,7 @@ int main (int argc, char *argv[])
         cout << solution[i] << " ";
     } cout << endl;
 
-
+*/
     Herd h(input);
 
     return 0;

@@ -11,7 +11,7 @@ class Whale
     public: 
 
         //  explicit Whale::Whale(const Whale &whale);
-        explicit Whale(const Input &input, int evaluations = 100000, int maxFails = 20);
+        explicit Whale( int dimension, vector< vector<int> > distances, vector< vector<int> > flow);
 
         // Calculate cost using objetive function
         int calculateCost();//vector<int> &solution);
@@ -25,6 +25,8 @@ class Whale
         vector<int> getSolution();
         int getCost();
         double getTime();
+
+        void setSolution(vector<int> v);
 
     private:
         // Input data
