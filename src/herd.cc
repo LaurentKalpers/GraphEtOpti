@@ -12,11 +12,11 @@ Herd::Herd(const Input &input, int maxEvaluations, int maxFails)
     maxFails_ = maxFails;
     bestSolution_.resize(dimension_);
     time_t start_ = time(NULL);
-    time_t seconds = 10; // end loop after this time has elapsed
+    time_t seconds = 10000000; // end loop after this time has elapsed
     endwait_ = start_ =  + seconds;
 
     b_ = 1;
-    taille_ = 3;
+    taille_ = 30;
 
     for(int i=0;i<taille_;++i)
     {
@@ -55,7 +55,8 @@ void Herd::execute()
     //solutiontmp.reserve(dimension_);
     vector<float> agent_t1;
     //while (start_ < endwait_)
-    while(t<10)
+    Whale bestbestwhale(dimension_, distances_, flow_);
+    while(t<5000)
     {
         cout<<t<<endl;
         for(int i = 0 ; i<taille_-1 ; ++i)
@@ -65,7 +66,7 @@ void Herd::execute()
             start_ = time(NULL);
 
             //Update WA parameters (a, A, C, L, p)
-            updateParameter();   
+            updateParameter(t);   
 
             for (int j=0 ; j<dimension_ ; ++j)
             {
@@ -109,12 +110,6 @@ void Herd::execute()
                 }
             }
 
-            cout << "\tSolution ancienne: ";
-            for (int j = 0; j < dimension_; ++j)
-            {
-                cout << whale_list_[i].getSolution()[j] << " ";
-            } cout << endl<<endl;
-
             /*if (recherche_any_repeated_values) {}*/
 
             //largest real value mapping
@@ -128,25 +123,29 @@ void Herd::execute()
                 solutiontmp[maxElementIndex] = dimension_-j-1;   
                 //cout<<"real mapping"<<endl;       
             }
-            for (int j = 0; j < dimension_; ++j)
-            {
-                cout <<solutiontmp[j]<<" ";
-            } cout << endl<<endl;
+
 
             whale_list_[i].setSolution(solutiontmp);
-            cout << "\tSolution nouvelle: ";
-            for (int j = 0; j < dimension_; ++j)
-            {
-                cout << whale_list_[i].getSolution()[j] << " ";
-            } cout << endl<<endl;
-            /*agent_t1.clear();
+
+            agent_t1.clear();
             D_.clear();
             D_prime_.clear();
-            D_.resize(0);
-            D_prime_.resize(0);*/
+           // D_.resize(0);
+            //D_prime_.resize(0);
+            bestWhale_ = getBestWhale();
+            if(bestWhale_.calculateCost()<bestbestwhale.calculateCost()){
+                bestbestwhale = bestWhale_;
+            }
+
         }
         t=t+1;
     }
+            cout << "\tmeilleures solution :  ";
+            for (int j = 0; j < dimension_; ++j)
+            {
+                cout << bestbestwhale.getSolution()[j] << " ";
+            } cout << endl;
+            cout<<bestbestwhale.getCost()<<endl;
 }
 
 Whale Herd::getBestWhale()
@@ -190,9 +189,9 @@ void Herd::updateBestSolution()
     }
 }
 
-void Herd::updateParameter()
+void Herd::updateParameter(int t)
 { 
-    a_ =-(float)rand()*2/(float)RAND_MAX; //a = random entre -2 et 0  on doit changr decroit linéairement de 2 a 0
+    a_ =2-t/10000; //a = random entre -2 et 0  on doit changr decroit linéairement de 2 a 0
     r_ = (float)rand()/(float)RAND_MAX;
     A_= 2*a_*r_ - a_;
     C_ = 2*r_;

@@ -22,7 +22,7 @@ class Herd
 
         int getBestScore();
 
-        void updateParameter();
+        void updateParameter(int t);
 
         Whale getWhale(int indice);
 

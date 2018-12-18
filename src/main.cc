@@ -6,12 +6,15 @@
 #include "memetic.h"
 #include "whale.h"
 #include "herd.h"
+#include <time.h>
 
 using namespace std;
 
 int main (int argc, char *argv[])
 {
    
+    srand(time(0));
+
     vector<int> solution;
 
     if (argc < 2 || argc > 3)

@@ -50,6 +50,7 @@ vector<int> Whale::getSolution()
 
 int Whale::getCost()
 {
+    cost_ = calculateCost();
     return cost_;
 }
 
