@@ -46,9 +46,9 @@ class Herd
         float p_;
         float l_;
         float b_;
-        vector<int> D_;
+        vector<float> D_;
         vector<int> bestSolution_;
-        vector<int> D_prime_;
+        vector<float> D_prime_;
         int bestScore_;
         time_t start_;
         time_t endwait_;

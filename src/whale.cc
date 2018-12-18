@@ -17,10 +17,15 @@ Whale::Whale(int dimension, vector< vector<int> > distances,vector< vector<int> 
 
 }
 
+
+void Whale::setSolution(vector<int> solution)
+{
+    solution.resize(dimension_);
+    solution_.resize(dimension_);
+    solution_ = solution;
+}
+
 void Whale::execute(){
-
-    
-
 }
 
 int Whale::calculateCost()//vector<int> &solution)
@@ -68,9 +73,4 @@ vector<int> Whale::randomSolution()
     random_shuffle (solution.begin(), solution.end());
 
     return solution;
-}
-
-void Whale::setSolution(vector<int> v)
-{
-    solution_ = v ; 
 }

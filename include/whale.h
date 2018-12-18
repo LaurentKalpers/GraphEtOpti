@@ -26,7 +26,7 @@ class Whale
         int getCost();
         double getTime();
 
-        void setSolution(vector<int> v);
+        void setSolution(vector<int> solution);
 
     private:
         // Input data

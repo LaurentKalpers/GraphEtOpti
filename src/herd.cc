@@ -16,7 +16,7 @@ Herd::Herd(const Input &input, int maxEvaluations, int maxFails)
     endwait_ = start_ =  + seconds;
 
     b_ = 1;
-    taille_ = 10;
+    taille_ = 3;
 
     for(int i=0;i<taille_;++i)
     {
@@ -52,40 +52,40 @@ void Herd::execute()
     int t=0;
     Whale bestWhale_ = getBestWhale();
     vector<int> solutiontmp;
-    solutiontmp.reserve(dimension_);
+    //solutiontmp.reserve(dimension_);
     vector<float> agent_t1;
     //while (start_ < endwait_)
-    while(t<1000000)
+    while(t<10)
     {
         cout<<t<<endl;
         for(int i = 0 ; i<taille_-1 ; ++i)
         {
-            cout<<"1";
-
+            solutiontmp.resize(dimension_);
 
             start_ = time(NULL);
 
             //Update WA parameters (a, A, C, L, p)
-            updateParameter();
-            cout<<"2";
-            
+            updateParameter();   
+
             for (int j=0 ; j<dimension_ ; ++j)
             {
-                D_.push_back(abs(C_*bestWhale_.getSolution()[j]) - whale_list_[i].getSolution()[j]);
-                D_prime_.push_back(abs(bestWhale_.getSolution()[j]) - (whale_list_[i].getSolution()[j]));
+                D_.push_back(abs(C_*bestWhale_.getSolution()[j] - whale_list_[i].getSolution()[j]));
+                D_prime_.push_back(abs(bestWhale_.getSolution()[j] - whale_list_[i].getSolution()[j]));
             }
 
-            cout<<"update"<<endl;
+            //cout<<"update"<<endl;
             
-            if(p_<0.5) {    
-                if(abs(A_)<1) {
+            if(p_<0.5) 
+            {    
+                if(abs(A_)<1) 
+                {
                     //update the current search agent
                     //agent_t1 = bestWhale_.getSolution() - A_*D_;
-                    for (int j=0 ; j<dimension_ ; ++j){
+                    for (int j=0 ; j<dimension_ ; ++j)
+                    {
                         agent_t1.push_back(bestWhale_.getSolution()[j] - whale_list_[i].getSolution()[j]);
                     }
-                    cout<<"if1"<<endl;
-                    }
+                }
                 else if (abs(A_)>=1)
                 {
                     //select random search agent
@@ -96,41 +96,54 @@ void Herd::execute()
                     {
                         agent_t1.push_back(w.getSolution()[j] - whale_list_[i].getSolution()[j]);
                     }
-                    cout<<"if2"<<endl;
-                    }
                 }
+            }
             
-            else if (p_>=0.5) {
+            else if (p_>=0.5) 
+            {
                 //update the current search agent
                 //agent_t1 = D_prime * exp(b_*l) * cos(2*M_PI*l) + bestWhale_.getSolution();
-                for (int j=0 ; j<dimension_ ; ++j){
+                for (int j=0 ; j<dimension_ ; ++j)
+                {
                     agent_t1.push_back(D_prime_[j] * exp(l_) * cos(2*M_PI*1) * bestWhale_.getSolution()[j]);
                 }
-                cout<<"if3"<<endl;
             }
+
+            cout << "\tSolution ancienne: ";
+            for (int j = 0; j < dimension_; ++j)
+            {
+                cout << whale_list_[i].getSolution()[j] << " ";
+            } cout << endl<<endl;
 
             /*if (recherche_any_repeated_values) {}*/
 
             //largest real value mapping
             //qsort(<arrayname>,<size>,sizeof(<elementsize>),compare_function);
             //qsort(agent_t1, sizeof(agent_t1),sizeof(agent_t1),&Herd::compare_function);
-            for(int j = 0; j<dimension_;++j){         
+
+            for(int j = 0; j<dimension_;++j)
+            {         
                 int maxElementIndex = max_element(agent_t1.begin(),agent_t1.end()) - agent_t1.begin();
                 agent_t1[maxElementIndex] = -100000000000000 ;
-                solutiontmp[maxElementIndex] = dimension_-j;   
-                cout<<"real mapping"<<endl;            
+                solutiontmp[maxElementIndex] = dimension_-j-1;   
+                //cout<<"real mapping"<<endl;       
             }
-            whale_list_[i].setSolution(solutiontmp);
-            cout << "\tSolution: ";
             for (int j = 0; j < dimension_; ++j)
             {
-                cout << solutiontmp[j] << " ";
+                cout <<solutiontmp[j]<<" ";
             } cout << endl<<endl;
-            agent_t1.clear();
+
+            whale_list_[i].setSolution(solutiontmp);
+            cout << "\tSolution nouvelle: ";
+            for (int j = 0; j < dimension_; ++j)
+            {
+                cout << whale_list_[i].getSolution()[j] << " ";
+            } cout << endl<<endl;
+            /*agent_t1.clear();
             D_.clear();
             D_prime_.clear();
-            D.resize(0);
-            D_prime_.resize(0);
+            D_.resize(0);
+            D_prime_.resize(0);*/
         }
         t=t+1;
     }
