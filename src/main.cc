@@ -82,7 +82,13 @@ int main (int argc, char *argv[])
     } cout << endl;
 
 */
+    cout<<"1"<<endl;
     Herd h(input);
+    cout<<"2"<<endl;
+    Herd s(input);
+    cout<<"3"<<endl;
+    Herd p(input);
+
 
     return 0;
 }

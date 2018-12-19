@@ -17,35 +17,35 @@ Herd::Herd(const Input &input, int maxEvaluations, int maxFails)
     endwait_ = start_ =  + seconds;
 
     b_ = 1;
-    taille_ = 20;
+    taille_ = 50;
 
     for(int i=0;i<taille_;++i)
     {
         Whale w(dimension_, distances_, flow_);
-        cout<<w.getCost()<<endl;
-        for (int j = 0; j < dimension_; ++j)
+        //cout<<w.getCost()<<endl;
+        /*for (int j = 0; j < dimension_; ++j)
         {
-        cout << w.getSolution()[j] << " ";
-        } cout << endl;
+        //cout << w.getSolution()[j] << " ";
+        } cout << endl;*/
         whale_list_.push_back(w);
     }
 
     bestScore_ = getBestScore();
-    cout << "\tCost: " << bestScore_ << endl;      
-    cout << "\tSolution: ";
-    for (int i = 0; i < dimension_; ++i)
+    //cout << "\tCost: " << bestScore_ << endl;      
+    //cout << "\tSolution: ";
+    /*for (int i = 0; i < dimension_; ++i)
     {
         cout << getBestWhale().getSolution()[i] << " ";
-    } cout << endl;
+    } cout << endl;*/
 
     execute();
     bestScore_ = getBestScore();
-    cout << "\tCost: " << bestScore_ << endl;      
-    cout << "\tSolution: ";
-    for (int i = 0; i < dimension_; ++i)
+    //cout << "\tCost: " << bestScore_ << endl;      
+    //cout << "\tSolution: ";
+   /*for (int i = 0; i < dimension_; ++i)
     {
         cout << getBestWhale().getSolution()[i] << " ";
-    } cout << endl;
+    } cout << endl;*/
 }
 
 void Herd::execute()
@@ -58,9 +58,9 @@ void Herd::execute()
     vector<float> agent_t1;
     //while (start_ < endwait_)
     Whale bestbestwhale(dimension_, distances_, flow_);
-    while(t<5001)
+    while(t<15001)
     {
-        cout<<t<<endl;
+        //cout<<t<<endl;
         for(int i = 0 ; i<taille_ ; ++i)
         {
             solutiontmp.resize(dimension_);
@@ -133,12 +133,12 @@ void Herd::execute()
             whale_list_[i].setSolution(solutiontmp);
             }
 
-            cout << "\t solution whale :  ";
+            /*cout << "\t solution whale :  ";
             for (int j = 0; j < dimension_; ++j)
             {
                 cout << whale_list_[i].getSolution()[j] << " ";
             } cout << endl;
-            cout<<whale_list_[i].getCost()<<endl;
+            cout<<whale_list_[i].getCost()<<endl;*/
 
             agent_t1.clear();
             D_.clear();
@@ -214,21 +214,22 @@ void Herd::execute()
 			int r = neighbourhood_[z - 1].r;
 			int s = neighbourhood_[z - 1].s;
 
-            cout << "\t Avant swap :  ";
+            /*cout << "\t Avant swap :  ";
             for (int j = 0; j < dimension_; ++j)
             {
                 cout << currentSolution[j] << " ";
             } cout << endl;
-            cout<<calculateCost(currentSolution)<<endl;
+            cout<<calculateCost(currentSolution)<<endl;*/
 
 			// Jump to something
 			swap(currentSolution, r, s);
-            cout << "\t Après swap :  ";
-            for (int j = 0; j < dimension_; ++j)
+            //cout << "\t Après swap :  ";
+
+            /*for (int j = 0; j < dimension_; ++j)
             {
                 cout << currentSolution[j] << " ";
             } cout << endl;
-            cout<<calculateCost(currentSolution)<<endl;
+            cout<<calculateCost(currentSolution)<<endl;*/
 
             whale_list_[i].setSolution(currentSolution);
             //cout<<"Après set solution : "<<whale_list_[i].getSolution()<<"\n";
@@ -335,7 +336,7 @@ void Herd::updateBestSolution()
 
 void Herd::updateParameter(int t)
 { 
-    a_ =2-t/2500; 
+    a_ =2-t/7500; 
     r1_ = (float)rand()/(float)RAND_MAX;
     r2_ = (float)rand()/(float)RAND_MAX;
     A_= 2*a_*r1_ - a_;
