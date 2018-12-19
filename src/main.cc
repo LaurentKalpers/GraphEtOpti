@@ -82,13 +82,17 @@ int main (int argc, char *argv[])
     } cout << endl;
 
 */
-    cout<<"1"<<endl;
+double temps_total = 0;
+for(int i= 0 ; i<10 ; ++i)
+{
+    cout<<i+1<<endl;
     Herd h(input);
-    cout<<"2"<<endl;
-    Herd s(input);
-    cout<<"3"<<endl;
-    Herd p(input);
-
+    /*cout<<"Time : ";
+    cout<<h.getTime()<<endl;
+    cout<<endl;
+    temps_total+=h.getTime();*/
+}
+//cout<<"temps total = "<<temps_total<<endl;
 
     return 0;
 }

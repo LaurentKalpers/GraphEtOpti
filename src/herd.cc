@@ -9,43 +9,36 @@ Herd::Herd(const Input &input, int maxEvaluations, int maxFails)
 {
     //initialization
     //input_ = input;
-    maxEvaluations_ = maxEvaluations;
+    maxEvaluations_ = 5001;
+    b_ = 1;
+    taille_ = 60;
+    neighbourhoodlength_ = 30;
+    tabusize_ = dimension_/5;
+
+
     maxFails_ = maxFails;
     bestSolution_.resize(dimension_);
     time_t start_ = time(NULL);
     time_t seconds = 10000000; // end loop after this time has elapsed
     endwait_ = start_ =  + seconds;
 
-    b_ = 1;
-    taille_ = 50;
-
     for(int i=0;i<taille_;++i)
     {
         Whale w(dimension_, distances_, flow_);
-        //cout<<w.getCost()<<endl;
-        /*for (int j = 0; j < dimension_; ++j)
-        {
-        //cout << w.getSolution()[j] << " ";
-        } cout << endl;*/
         whale_list_.push_back(w);
     }
 
     bestScore_ = getBestScore();
-    //cout << "\tCost: " << bestScore_ << endl;      
-    //cout << "\tSolution: ";
-    /*for (int i = 0; i < dimension_; ++i)
-    {
-        cout << getBestWhale().getSolution()[i] << " ";
-    } cout << endl;*/
+
+    //high_resolution_clock::time_point t1 = high_resolution_clock::now();
+
 
     execute();
     bestScore_ = getBestScore();
-    //cout << "\tCost: " << bestScore_ << endl;      
-    //cout << "\tSolution: ";
-   /*for (int i = 0; i < dimension_; ++i)
-    {
-        cout << getBestWhale().getSolution()[i] << " ";
-    } cout << endl;*/
+
+    /*high_resolution_clock::time_point t2 = high_resolution_clock::now();
+    duration<double> time_span = duration_cast<duration<double>>(t2 - t1);
+    time_ = time_span.count();*/
 }
 
 void Herd::execute()
@@ -58,9 +51,8 @@ void Herd::execute()
     vector<float> agent_t1;
     //while (start_ < endwait_)
     Whale bestbestwhale(dimension_, distances_, flow_);
-    while(t<15001)
+    while(t<maxEvaluations_)
     {
-        //cout<<t<<endl;
         for(int i = 0 ; i<taille_ ; ++i)
         {
             solutiontmp.resize(dimension_);
@@ -75,15 +67,12 @@ void Herd::execute()
                 D_.push_back(abs(C_*bestWhale_.getSolution()[j] - whale_list_[i].getSolution()[j]));
                 D_prime_.push_back(abs(bestWhale_.getSolution()[j] - whale_list_[i].getSolution()[j]));
             }
-
-            //cout<<"update"<<endl;
             
             if(p_<0.5) 
             {    
                 if(abs(A_)<1) 
                 {
                     //update the current search agent
-                    //agent_t1 = bestWhale_.getSolution() - A_*D_;
                     for (int j=0 ; j<dimension_ ; ++j)
                     {
                         agent_t1.push_back(bestWhale_.getSolution()[j] - A_*D_[j]);
@@ -92,14 +81,10 @@ void Herd::execute()
                 else if (abs(A_)>=1)
                 {
                     //select random search agent
-                    //update the current search agent
-                    //agent_t1 = agent_random - A_*D_;
-
-                    //Whale w(dimension_, distances_, flow_);
                     randNum = rand()%(taille_);// + 1) ;
                     for (int j=0 ; j<dimension_ ; ++j)
                     {
-                        //agent_t1.push_back(w.getSolution()[j] -  A_*D_[j]);
+                        //update the current search agent
                         agent_t1.push_back(whale_list_[randNum].getSolution()[j] -  A_*D_[j]);
                     }
                 }
@@ -108,7 +93,6 @@ void Herd::execute()
             else if (p_>=0.5) 
             {
                 //update the current search agent
-                //agent_t1 = D_prime * exp(b_*l) * cos(2*M_PI*l) + bestWhale_.getSolution();
                 for (int j=0 ; j<dimension_ ; ++j)
                 {
                     agent_t1.push_back(D_prime_[j] * exp(b_*l_) * cos(2*M_PI*l_) + bestWhale_.getSolution()[j]);
@@ -117,28 +101,36 @@ void Herd::execute()
 
             /*if (recherche_any_repeated_values) {}*/
 
-            //largest real value mapping
-            //qsort(<arrayname>,<size>,sizeof(<elementsize>),compare_function);
-            //qsort(agent_t1, sizeof(agent_t1),sizeof(agent_t1),&Herd::compare_function);
-
+            //largest real value mapping;
             for(int j = 0; j<dimension_;++j)
             {         
                 int maxElementIndex = max_element(agent_t1.begin(),agent_t1.end()) - agent_t1.begin();
                 agent_t1[maxElementIndex] = -100000000000000 ;
-                solutiontmp[maxElementIndex] = dimension_-j-1;   
-                //cout<<"real mapping"<<endl;       
+                solutiontmp[maxElementIndex] = dimension_-j-1;         
             }
 
             if(calculateCost(solutiontmp)< whale_list_[i].getCost()){
             whale_list_[i].setSolution(solutiontmp);
             }
 
-            /*cout << "\t solution whale :  ";
-            for (int j = 0; j < dimension_; ++j)
+            for(int j; j<taille_; ++j)
             {
-                cout << whale_list_[i].getSolution()[j] << " ";
-            } cout << endl;
-            cout<<whale_list_[i].getCost()<<endl;*/
+                if(j!=i)
+                {
+                    for(int k ; k<dimension_ ; ++k)
+                    {
+                        if(whale_list_[i].getSolution()[k] != whale_list_[j].getSolution()[k])
+                        {
+                            break;
+                        }
+                        else if(k == dimension_-1)
+                        {
+                            Whale w(dimension_, distances_, flow_);
+                            whale_list_[i] = w;
+                        }
+                    }
+                }
+            }
 
             agent_t1.clear();
             D_.clear();
@@ -151,15 +143,15 @@ void Herd::execute()
             //TABU SEARCH
             // Empty the neighborhoud
 				int neighbourhoodSize_;
-				neighbourhoodSize_ = 30;
+				neighbourhoodSize_ = neighbourhoodlength_;
                 vector<int>currentSolution=whale_list_[i].getSolution();
                 cost_=whale_list_[i].getCost();
                 int currentCost=cost_;
                 bool improvement=false;
-                int tabuLength = dimension_ / 5;
+                int tabuLength = tabusize_;
 
 			// Generate the Neighbourhood
-			for (int i = 0; i < neighbourhoodSize_; ++i)
+			for (int j = 0; j < neighbourhoodSize_; ++j)
 			{
 				// Generate random r and s
 				int r = rand() % dimension_;
@@ -214,27 +206,11 @@ void Herd::execute()
 			int r = neighbourhood_[z - 1].r;
 			int s = neighbourhood_[z - 1].s;
 
-            /*cout << "\t Avant swap :  ";
-            for (int j = 0; j < dimension_; ++j)
-            {
-                cout << currentSolution[j] << " ";
-            } cout << endl;
-            cout<<calculateCost(currentSolution)<<endl;*/
-
 			// Jump to something
 			swap(currentSolution, r, s);
-            //cout << "\t Après swap :  ";
-
-            /*for (int j = 0; j < dimension_; ++j)
-            {
-                cout << currentSolution[j] << " ";
-            } cout << endl;
-            cout<<calculateCost(currentSolution)<<endl;*/
 
             whale_list_[i].setSolution(currentSolution);
-            //cout<<"Après set solution : "<<whale_list_[i].getSolution()<<"\n";
 			currentCost = neighbourhood_[z - 1].cost;
-            //cout<<"Après set solution : "<<whale_list_[i].getCost()<<"\n";
 
 			// Update frecuency matrix
 			//frec_[r][currentSolution[r]]++;
@@ -282,12 +258,13 @@ void Herd::execute()
         }
         t=t+1;
     }
-    cout << "\tmeilleures solution tabu :  ";
+    cout << "meilleures solution :  ";
             for (int j = 0; j < dimension_; ++j)
             {
                 cout << bestbestwhale.getSolution()[j] << " ";
             } cout << endl;
-            cout<<bestbestwhale.getCost()<<endl;
+    cout << "meilleures cout :  ";
+        cout<<bestbestwhale.getCost()<<endl;
 }
 
      
@@ -336,7 +313,7 @@ void Herd::updateBestSolution()
 
 void Herd::updateParameter(int t)
 { 
-    a_ =2-t/7500; 
+    a_ =2-(2*t)/maxEvaluations_; 
     r1_ = (float)rand()/(float)RAND_MAX;
     r2_ = (float)rand()/(float)RAND_MAX;
     A_= 2*a_*r1_ - a_;
@@ -442,3 +419,8 @@ void Herd::tabuReset(int &tabuLength)
 		tabuLength *= random - (0.5 * tabuLength);
 	}
 }
+
+/*double Herd::getTime()
+{
+    return time_;
+}*/

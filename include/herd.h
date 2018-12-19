@@ -7,6 +7,7 @@
 #include <deque>
 
 using namespace std;
+using namespace std::chrono;
 
 class Herd
 {
@@ -39,7 +40,7 @@ class Herd
 
         void tabuReset(int &tabuLength);
 
-        double getTime();
+        //double getTime();
 
         typedef struct Neighbour
         {
@@ -93,6 +94,10 @@ class Herd
         vector<Whale> whale_list_;
        // Whale bestWhale_;
         int taille_;
+        int neighbourhoodlength_;
+        int tabusize_;
+
+        double time_;
 
 };
 
