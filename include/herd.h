@@ -40,7 +40,8 @@ class Herd
         int maxFails_ ;
 
         float a_;
-        float r_;
+        float r1_;
+        float r2_;
         float A_;
         float C_;
         float p_;

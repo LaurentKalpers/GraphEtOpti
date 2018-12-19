@@ -16,7 +16,7 @@ Herd::Herd(const Input &input, int maxEvaluations, int maxFails)
     endwait_ = start_ =  + seconds;
 
     b_ = 1;
-    taille_ = 30;
+    taille_ = 20;
 
     for(int i=0;i<taille_;++i)
     {
@@ -49,6 +49,7 @@ Herd::Herd(const Input &input, int maxEvaluations, int maxFails)
 
 void Herd::execute()
 {
+    int randNum;
     int t=0;
     Whale bestWhale_ = getBestWhale();
     vector<int> solutiontmp;
@@ -56,10 +57,10 @@ void Herd::execute()
     vector<float> agent_t1;
     //while (start_ < endwait_)
     Whale bestbestwhale(dimension_, distances_, flow_);
-    while(t<5000)
+    while(t<5001)
     {
         cout<<t<<endl;
-        for(int i = 0 ; i<taille_-1 ; ++i)
+        for(int i = 0 ; i<taille_ ; ++i)
         {
             solutiontmp.resize(dimension_);
 
@@ -84,7 +85,7 @@ void Herd::execute()
                     //agent_t1 = bestWhale_.getSolution() - A_*D_;
                     for (int j=0 ; j<dimension_ ; ++j)
                     {
-                        agent_t1.push_back(bestWhale_.getSolution()[j] - whale_list_[i].getSolution()[j]);
+                        agent_t1.push_back(bestWhale_.getSolution()[j] - A_*D_[j]);
                     }
                 }
                 else if (abs(A_)>=1)
@@ -92,10 +93,13 @@ void Herd::execute()
                     //select random search agent
                     //update the current search agent
                     //agent_t1 = agent_random - A_*D_;
-                    Whale w(dimension_, distances_, flow_);
+
+                    //Whale w(dimension_, distances_, flow_);
+                    randNum = rand()%(taille_);// + 1) ;
                     for (int j=0 ; j<dimension_ ; ++j)
                     {
-                        agent_t1.push_back(w.getSolution()[j] - whale_list_[i].getSolution()[j]);
+                        //agent_t1.push_back(w.getSolution()[j] -  A_*D_[j]);
+                        agent_t1.push_back(whale_list_[randNum].getSolution()[j] -  A_*D_[j]);
                     }
                 }
             }
@@ -106,7 +110,7 @@ void Herd::execute()
                 //agent_t1 = D_prime * exp(b_*l) * cos(2*M_PI*l) + bestWhale_.getSolution();
                 for (int j=0 ; j<dimension_ ; ++j)
                 {
-                    agent_t1.push_back(D_prime_[j] * exp(l_) * cos(2*M_PI*1) * bestWhale_.getSolution()[j]);
+                    agent_t1.push_back(D_prime_[j] * exp(b_*l_) * cos(2*M_PI*l_) + bestWhale_.getSolution()[j]);
                 }
             }
 
@@ -136,6 +140,9 @@ void Herd::execute()
             if(bestWhale_.calculateCost()<bestbestwhale.calculateCost()){
                 bestbestwhale = bestWhale_;
             }
+            else {
+                bestWhale_ = bestbestwhale;
+            }
 
         }
         t=t+1;
@@ -152,7 +159,7 @@ Whale Herd::getBestWhale()
 {
     int bestCost = whale_list_[0].calculateCost();
     int indice_best_whale = 0;
-    for(int i = 1 ; i < taille_-1 ; ++i)
+    for(int i = 1 ; i < taille_ ; ++i)
     {
         if (bestCost>whale_list_[i].calculateCost())
         {
@@ -166,7 +173,7 @@ Whale Herd::getBestWhale()
 int Herd::getBestScore()
 {
     int bestCost = whale_list_[0].calculateCost();
-    for(int i = 1 ; i < taille_-1 ; ++i)
+    for(int i = 1 ; i < taille_ ; ++i)
     {
         if (bestCost>whale_list_[i].calculateCost())
         {
@@ -191,10 +198,11 @@ void Herd::updateBestSolution()
 
 void Herd::updateParameter(int t)
 { 
-    a_ =2-t/10000; //a = random entre -2 et 0  on doit changr decroit linéairement de 2 a 0
-    r_ = (float)rand()/(float)RAND_MAX;
-    A_= 2*a_*r_ - a_;
-    C_ = 2*r_;
+    a_ =2-t/2500; 
+    r1_ = (float)rand()/(float)RAND_MAX;
+    r2_ = (float)rand()/(float)RAND_MAX;
+    A_= 2*a_*r1_ - a_;
+    C_ = 2*r2_;
     p_ = (float)rand()/(float)RAND_MAX;
     l_ =((float(rand()) / float(RAND_MAX)) * (2)) -1;
 }
